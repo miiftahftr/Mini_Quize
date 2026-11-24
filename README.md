@@ -42,20 +42,3 @@ Proyek ini dibangun sebagai **Single-File Standalone Web Application** tanpa dep
 | **Audio Sintetis** | Native Web Audio API |
 | **Hosting** | Static Deployment (Vercel / GitHub Pages) |
 
----
-
-## 🚀 Cara Deploy ke Vercel dari GitHub
-
-1. Pastikan file HTML yang sudah dikunci dari mode *Editor Kasus* telah diganti namanya menjadi **`index.html`**.
-2. Unggah `index.html` dan `README.md` ini ke repositori GitHub kamu.
-3. Buka [Vercel Dashboard](https://vercel.com/new) dan klik **Add New → Project**.
-4. Pilih repositori GitHub ini, biarkan pengaturan *Framework Preset* pada **Other** (karena merupakan file statis murni), lalu klik **Deploy**.
-5. Tautan siap dibagikan dalam hitungan detik!
-
----
-
-## 📁 Struktur Repositori
-
-```text
-├── index.html      # Aplikasi utama & payload foto terenkripsi (AES-GCM)
-└── README.md       # Dokumentasi proyek
