@@ -985,9 +985,6 @@ function renderDetectiveOS() {
     const statusTag = document.getElementById('phone-status-tag');
     const titleEl = document.getElementById('phone-title');
     const storyEl = document.getElementById('phone-story-text');
-    const hintBoxEl = document.getElementById('phone-hint-box');
-    const hintTextEl = document.getElementById('phone-hint-text');
-    const hintTier2El = document.getElementById('phone-hint-tier2');
     const actionBtn = document.getElementById('phone-action-btn');
 
     if (cur === 4) {
@@ -996,34 +993,16 @@ function renderDetectiveOS() {
         statusTag.textContent = '100% Terbuka';
         titleEl.textContent = 'Foto Kenangan Rahasia';
         storyEl.textContent = gameState.unlockedMessage;
-        hintBoxEl.classList.remove('hidden');
-        hintTextEl.textContent = `Kunci Gabungan Valid: ${gameState.solvedAnswers[2].toUpperCase()}`;
-        hintTier2El.classList.add('hidden');
         actionBtn.textContent = 'Lihat Foto Ukuran Penuh';
         actionBtn.onclick = () => { playKeySound(); openUnlockedPhotoModal(); };
     } else {
         const stgObj = activeVault.stages[viewStg - 1];
-        const hintLevel = gameState.unlockedHints[viewStg] || 0;
 
         visualHeader.innerHTML = getStageDioramaSvg(viewStg);
         stagePill.textContent = `BABAK 0${viewStg} / 03`;
         statusTag.textContent = viewStg < cur ? 'Terpecahkan' : 'Menunggu Sandi';
         titleEl.textContent = stgObj.title;
         storyEl.textContent = stgObj.story;
-
-        if (hintLevel >= 1) {
-            hintBoxEl.classList.remove('hidden');
-            hintTextEl.textContent = stgObj.hint;
-        } else {
-            hintBoxEl.classList.add('hidden');
-        }
-
-        if (hintLevel >= 2) {
-            hintTier2El.textContent = stgObj.hint2 || 'Periksa kembali ejaan & spasi jawaban.';
-            hintTier2El.classList.remove('hidden');
-        } else {
-            hintTier2El.classList.add('hidden');
-        }
 
         actionBtn.textContent = viewStg === cur ? 'Masukkan Kode Temuan' : 'Kembali ke Babak Aktif';
         actionBtn.onclick = () => {
@@ -1195,29 +1174,88 @@ function closeVaultModal() {
 }
 
 function showQuickHint() {
-    const stg = gameState.currentStage === 4 ? 3 : gameState.viewingStage;
     if (!activeVault) return;
-
-    const currentTier = gameState.unlockedHints[stg] || 0;
-    if (currentTier < 2) {
-        gameState.unlockedHints[stg] = currentTier + 1;
-        penaltySeconds += 120;
-        const penEl = document.getElementById('penalty-counter');
-        if (penEl) penEl.textContent = `+${formatSecondsMMSS(penaltySeconds)}`;
-
-        appendActivityLog(
-            'Sistem_Petunjuk',
-            'bg-[#f6e08b]',
-            `Membuka Petunjuk Tingkat ${currentTier + 1} Babak 0${stg} (+02:00 penalti).`,
-            'decoy'
-        );
-        renderDetectiveOS();
-        showToast(`Petunjuk Tingkat ${currentTier + 1} Babak 0${stg} dibuka (+02:00 penalti waktu).`, 'info');
-    } else {
-        showToast(`Semua petunjuk Babak 0${stg} sudah terbuka di layar bukti!`, 'info');
+    if (gameState.currentStage === 4) {
+        showToast('Seluruh babak sudah selesai dan brankas telah terbuka.', 'info');
+        return;
     }
 
-    if (window.innerWidth < 1024) switchMobilePane('canvas');
+    const stg = gameState.viewingStage;
+    const stgObj = activeVault.stages[stg - 1];
+    const unlockedTier = gameState.unlockedHints[stg] || 0;
+
+    const modal = document.getElementById('vault-modal');
+    const badge = document.getElementById('modal-badge');
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('modal-body-content');
+
+    badge.textContent = `0${stg}`;
+    badge.className = 'px-2.5 py-2.5 rounded-xl bg-[#f6e08b] text-clayink font-mono text-xs font-extrabold';
+    title.textContent = `Bantuan Investigasi — ${stgObj.title}`;
+
+    body.innerHTML = '';
+
+    if (unlockedTier === 0) {
+        const emptyBox = document.createElement('div');
+        emptyBox.className = 'clay-card p-3.5 text-xs text-claymuted leading-relaxed';
+        emptyBox.textContent = 'Belum ada petunjuk yang dibuka untuk babak ini. Membuka petunjuk akan menambahkan penalti waktu +02:00 pada stopwatch investigasi.';
+        body.appendChild(emptyBox);
+    }
+
+    if (unlockedTier >= 1) {
+        const tier1Box = document.createElement('div');
+        tier1Box.className = 'clay-sticky-yellow p-3.5 text-xs font-semibold text-clayink leading-relaxed';
+        tier1Box.textContent = stgObj.hint;
+        body.appendChild(tier1Box);
+    }
+
+    if (unlockedTier >= 2) {
+        const tier2Box = document.createElement('div');
+        tier2Box.className = 'clay-sticky-lavender p-3.5 text-xs font-semibold text-clayink leading-relaxed';
+        tier2Box.textContent = stgObj.hint2 || 'Periksa kembali ejaan dan spasi jawaban.';
+        body.appendChild(tier2Box);
+    }
+
+    if (unlockedTier < 2) {
+        const nextTier = unlockedTier + 1;
+        const unlockBtn = document.createElement('button');
+        unlockBtn.type = 'button';
+        unlockBtn.className = 'clay-btn-primary w-full py-3 font-bold text-xs sm:text-sm cursor-pointer';
+        unlockBtn.textContent = `Buka Petunjuk Tingkat ${nextTier} (+02:00 Penalti)`;
+        unlockBtn.onclick = () => {
+            playKeySound();
+            unlockHintTier(stg);
+        };
+        body.appendChild(unlockBtn);
+    } else {
+        const doneNote = document.createElement('p');
+        doneNote.className = 'text-[11px] font-mono text-center text-claymuted pt-1';
+        doneNote.textContent = 'Semua tingkat petunjuk pada babak ini sudah terbuka.';
+        body.appendChild(doneNote);
+    }
+
+    modal.classList.remove('hidden');
+}
+
+function unlockHintTier(stg) {
+    const currentTier = gameState.unlockedHints[stg] || 0;
+    if (currentTier >= 2) return;
+
+    const nextTier = currentTier + 1;
+    gameState.unlockedHints[stg] = nextTier;
+    penaltySeconds += 120;
+
+    const penEl = document.getElementById('penalty-counter');
+    if (penEl) penEl.textContent = `+${formatSecondsMMSS(penaltySeconds)}`;
+
+    appendActivityLog(
+        'Sistem_Petunjuk',
+        'bg-[#f6e08b]',
+        `Membuka Petunjuk Tingkat ${nextTier} Babak 0${stg} (+02:00 penalti).`,
+        'decoy'
+    );
+    showToast(`Petunjuk Tingkat ${nextTier} dibuka (+02:00 penalti waktu).`, 'info');
+    showQuickHint();
 }
 
 function focusAnswerInput() {
