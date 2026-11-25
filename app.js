@@ -1,14 +1,9 @@
-/**
- * PAYLOAD TERENKRIPSI MANDIRI
- * Bernilai null saat mode studio, otomatis diisi saat tombol "Kunci & Unduh File HTML" ditekan.
- */
 const EMBEDDED_VAULT_PAYLOAD = null;
 
 let activeVault = null;
 let uploadedCustomPhoto = "";
 let isEditorOpen = false;
 
-// Status Alat Investigasi, Audio & Stopwatch
 let audioCtx = null;
 let isAudioMuted = false;
 let isUvActive = false;
@@ -18,15 +13,15 @@ let penaltySeconds = 0;
 let timerInterval = null;
 
 let gameState = {
-    currentStage: 1,      // 1, 2, 3, atau 4 (Selesai/Terbuka)
-    viewingStage: 1,      // Babak yang sedang dilihat di layar bukti
-    solvedAnswers: [],    // [ans1, ans2, ans3]
+    currentStage: 1,
+    viewingStage: 1,
+    solvedAnswers: [],
     unlockedHints: { 1: 0, 2: 0, 3: 0 },
     unlockedPhotoUrl: "",
     unlockedMessage: ""
 };
 
-/* 1. MESIN EFEK SUARA TAKTIL (WEB AUDIO API)                          */
+/* --- Audio Taktil (Web Audio API) --- */
 
 function ensureAudioContext() {
     if (isAudioMuted) return null;
@@ -163,9 +158,8 @@ function playUnlockChime(isFinal = false) {
     });
 }
 
- 
-/* 2. ALAT INVESTIGASI INTERAKTIF: SENTER UV & KACA PEMBESAR           */
- 
+/* --- Alat Investigasi (Senter UV & Kaca Pembesar) --- */
+
 function toggleUvTool() {
     isUvActive = !isUvActive;
     playUvHumSound(isUvActive);
@@ -279,9 +273,8 @@ function hideMagnifierLens() {
     if (lens) lens.remove();
 }
 
- 
-/* 2B. GENERATOR FOTO POLAROID KENANGAN BAWAAN                         */
- 
+/* --- Generator Foto Polaroid Bawaan --- */
+
 function createDefaultMemoryPolaroid() {
     const canvas = document.createElement('canvas');
     canvas.width = 720;
@@ -336,9 +329,8 @@ function createDefaultMemoryPolaroid() {
     return canvas.toDataURL('image/jpeg', 0.9);
 }
 
- 
-/* 3. STOPWATCH INVESTIGASI & NAVIGASI TAB MOBILE                      */
- 
+/* --- Stopwatch & Navigasi Mobile --- */
+
 function formatSecondsMMSS(totalSec) {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
@@ -395,9 +387,6 @@ function switchMobilePane(paneName) {
     });
 }
 
-/**
- * Diorama SVG untuk layar tiap babak (Tinta UV hanya berisi petunjuk arah, bukan jawaban)
- */
 function getStageDioramaSvg(stage) {
     if (stage === 1) {
         return `<svg viewBox="0 0 320 160" class="w-full h-full object-cover">
@@ -415,7 +404,6 @@ function getStageDioramaSvg(stage) {
             <rect x="228" y="60" width="44" height="26" rx="2" fill="#ffffff"/>
             <text x="250" y="76" font-size="8" font-family="monospace" font-weight="bold" fill="#3a3228" text-anchor="middle">NO. 14</text>
             <rect x="180" y="116" width="112" height="16" rx="5" fill="#ebe1d0"/>
-            <!-- Simbol Petunjuk Arah Utara Tersembunyi (Tanpa Bocoran Teks Jawaban) -->
             <g class="uv-hidden-ink">
                 <polygon points="245,14 248,21 256,21 250,26 252,33 245,29 238,33 240,26 234,21 242,21" fill="#c084fc"/>
                 <text x="245" y="43" font-size="6.5" font-family="monospace" font-weight="bold" fill="#e9d5ff" text-anchor="middle">UV: KUNCI UTAMA (2 KATA)</text>
@@ -434,7 +422,6 @@ function getStageDioramaSvg(stage) {
             <text x="178" y="99" font-size="6.5" font-family="monospace" font-weight="bold" fill="#c0392b">03:15</text>
             <circle cx="212" cy="100" r="12" fill="#ccecf2" stroke="#2a7b88" stroke-width="3.5"/>
             <line x1="221" y1="108" x2="233" y2="118" stroke="#4a3728" stroke-width="4" stroke-linecap="round"/>
-            <!-- Peringatan Tinta UV Tersembunyi -->
             <g class="uv-hidden-ink">
                 <rect x="34" y="12" width="252" height="24" rx="6" fill="#3b0764" opacity="0.92"/>
                 <text x="160" y="27" font-size="8.5" font-family="monospace" font-weight="bold" fill="#e9d5ff" text-anchor="middle">JEBAKAN! TINTA MERAH INI PALSU — ABAIKAN</text>
@@ -460,7 +447,6 @@ function getStageDioramaSvg(stage) {
         <rect x="176" y="122" width="38" height="22" rx="5" fill="#9c6b43"/>
         <circle cx="152" cy="130" r="6" fill="none" stroke="#f2c44e" stroke-width="3"/>
         <line x1="158" y1="130" x2="174" y2="130" stroke="#f2c44e" stroke-width="3" stroke-linecap="round"/>
-        <!-- Petunjuk Rumus UV Tersembunyi (Tanpa Bocoran Angka) -->
         <g class="uv-hidden-ink">
             <rect x="210" y="72" width="98" height="22" rx="6" fill="#3b0764" opacity="0.9"/>
             <text x="259" y="86" font-size="7.5" font-family="monospace" font-weight="bold" fill="#38bdf8" text-anchor="middle">UV: [SANDI B1] + JAM</text>
@@ -468,9 +454,6 @@ function getStageDioramaSvg(stage) {
     </svg>`;
 }
 
-/**
- * Notifikasi Toast
- */
 function showToast(msg, type = 'info') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -491,9 +474,6 @@ function showToast(msg, type = 'info') {
     }, 3500);
 }
 
-/**
- * Menambahkan entri ke Log Aktivitas di panel kanan
- */
 function appendActivityLog(agentName, badgeColor, description, statusType = 'done') {
     const feed = document.getElementById('activity-log-feed');
     const now = new Date();
@@ -548,9 +528,8 @@ function appendActivityLog(agentName, badgeColor, description, statusType = 'don
     feed.prepend(item);
 }
 
-/**
- * Fungsi Keamanan & Penyegelan Brankas
- */
+/* --- Kriptografi & Penyegelan Brankas --- */
+
 function normalizeAnswer(str) {
     return String(str || '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
@@ -620,9 +599,6 @@ async function decryptSecretPayload(pkg, masterPass) {
     return JSON.parse(new TextDecoder().decode(plain));
 }
 
-/**
- * Membangun Brankas Terkunci dari Form Editor (Tanpa Bocoran Jawaban di Hint)
- */
 async function buildVaultFromEditor() {
     const q1 = document.getElementById('setup-q1').value.trim();
     const q2 = document.getElementById('setup-q2').value.trim();
@@ -681,9 +657,6 @@ async function buildVaultFromEditor() {
     };
 }
 
-/**
- * Upload & Kompresi Foto di Editor
- */
 function handlePhotoUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -721,9 +694,6 @@ function handlePhotoUpload(event) {
     reader.readAsDataURL(file);
 }
 
-/**
- * Terapkan Perubahan Editor ke Mode Penyelidik
- */
 async function applyCustomPuzzleAndPlay() {
     const vault = await buildVaultFromEditor();
     if (!vault) return;
@@ -733,9 +703,6 @@ async function applyCustomPuzzleAndPlay() {
     showToast('Kasus baru berhasil disegel dan siap dimainkan!', 'success');
 }
 
-/**
- * Ekspor File HTML Mandiri (Menggabungkan style.css & app.js secara otomatis agar 1 file siap kirim)
- */
 async function encryptAndDownloadStandalone() {
     try {
         const vault = isEditorOpen ? await buildVaultFromEditor() : activeVault;
@@ -743,7 +710,6 @@ async function encryptAndDownloadStandalone() {
 
         const docClone = document.documentElement.cloneNode(true);
 
-        // Hapus bagian Editor agar penerima tidak bisa mengintip/mengedit
         const editorView = docClone.querySelector('#canvas-editor-mode');
         if (editorView) editorView.remove();
 
@@ -759,10 +725,17 @@ async function encryptAndDownloadStandalone() {
         const playerView = docClone.querySelector('#canvas-player-mode');
         if (playerView) playerView.classList.remove('hidden');
 
+        // Kunci badge mode atas menjadi Mode Penyelidik pada file ekspor
+        const topPill = docClone.querySelector('#top-mode-pill');
+        if (topPill) {
+            topPill.textContent = 'Mode Penyelidik';
+            topPill.className = 'px-3 py-1 rounded-xl bg-[#6c5ce7] text-white text-[11px] font-bold shadow-sm cursor-default';
+            topPill.removeAttribute('onclick');
+        }
+
         const toastCont = docClone.querySelector('#toast-container');
         if (toastCont) toastCont.innerHTML = '';
 
-        // Ambil isi style.css & app.js agar file hasil unduhan tetap mandiri (1 file)
         try {
             const cssResp = await fetch('style.css');
             if (cssResp.ok) {
@@ -817,9 +790,8 @@ async function encryptAndDownloadStandalone() {
     }
 }
 
-/**
- * Toggle Mode Penyelidik vs Editor Kasus
- */
+/* --- Kontrol Tampilan & Navigasi Babak --- */
+
 function toggleMode() {
     if (EMBEDDED_VAULT_PAYLOAD) return;
 
@@ -846,9 +818,6 @@ function toggleMode() {
     }
 }
 
-/**
- * Klik Kartu Babak di Sidebar Kiri / Dock Bawah
- */
 function selectChapterCard(stageNum) {
     if (isEditorOpen) toggleMode();
 
@@ -863,9 +832,6 @@ function selectChapterCard(stageNum) {
     if (window.innerWidth < 1024) switchMobilePane('canvas');
 }
 
-/**
- * Inspeksi Node pada Peta Alur Cabang
- */
 function inspectTimelineNode(nodeIdx) {
     const titleEl = document.getElementById('popover-title');
     const descEl = document.getElementById('popover-desc');
@@ -921,9 +887,6 @@ function inspectTimelineNode(nodeIdx) {
     }
 }
 
-/**
- * Render Tampilan Keseluruhan Detektif OS
- */
 function renderDetectiveOS() {
     if (!activeVault) return;
 
@@ -935,7 +898,6 @@ function renderDetectiveOS() {
         vaultLockBadge.textContent = cur === 4 ? 'BRANKAS TERBUKA' : 'BRANKAS TERSEGEL';
     }
 
-    // Update Sidebar Cards (Babak 1, 2, 3)
     for (let i = 1; i <= 3; i++) {
         const card = document.getElementById(`nav-card-${i}`);
         const badge = document.getElementById(`badge-stage-${i}`);
@@ -964,13 +926,11 @@ function renderDetectiveOS() {
         }
     }
 
-    // Update Checklist Sticky Note Kuning
     document.getElementById('chk-1').textContent = gameState.solvedAnswers[0] ? '✓' : '•';
     document.getElementById('chk-2').textContent = gameState.solvedAnswers[1] ? '!' : '•';
     document.getElementById('chk-3').textContent = gameState.solvedAnswers[2] ? '✓' : '•';
     document.getElementById('chk-4').textContent = cur === 4 ? '✓' : '•';
 
-    // Update Sticky Note Lavender
     const lavText = document.getElementById('lavender-clue-text');
     if (gameState.solvedAnswers[0] && !gameState.solvedAnswers[1]) {
         lavText.textContent = `Sandi "${gameState.solvedAnswers[0].toUpperCase()}" tersimpan! Sekarang periksa meja kelas di Babak 2.`;
@@ -982,7 +942,6 @@ function renderDetectiveOS() {
         lavText.textContent = 'Temukan kata sandi di Babak 1 dulu. Hati-hati, tidak semua petunjuk di sekolah itu asli!';
     }
 
-    // Update 3 Kartu Bukti Pastel Kanan
     if (gameState.solvedAnswers[0]) {
         document.getElementById('card-b1-status').textContent = 'VALID';
         document.getElementById('card-b1-val').textContent = gameState.solvedAnswers[0].toUpperCase();
@@ -1014,21 +973,19 @@ function renderDetectiveOS() {
         document.getElementById('card-b3-val').textContent = '[BUKTI #01 + KODE JAM]';
     }
 
-    // Update Garis Progres Timeline
     const lineProgress = document.getElementById('line-main-progress');
     const xEndMap = { 1: 142, 2: 230, 3: 428, 4: 534 };
     lineProgress.setAttribute('x2', xEndMap[cur] || 142);
 
-    // Update Progress Footer Kanan
     const solvedCount = Math.min(gameState.solvedAnswers.length, 3);
     document.getElementById('progress-ratio-text').textContent = `${solvedCount}/3`;
 
-    // Update Layar Bukti di Tengah
     const visualHeader = document.getElementById('phone-visual-header');
     const stagePill = document.getElementById('phone-stage-pill');
     const statusTag = document.getElementById('phone-status-tag');
     const titleEl = document.getElementById('phone-title');
     const storyEl = document.getElementById('phone-story-text');
+    const hintBoxEl = document.getElementById('phone-hint-box');
     const hintTextEl = document.getElementById('phone-hint-text');
     const hintTier2El = document.getElementById('phone-hint-tier2');
     const actionBtn = document.getElementById('phone-action-btn');
@@ -1039,6 +996,7 @@ function renderDetectiveOS() {
         statusTag.textContent = '100% Terbuka';
         titleEl.textContent = 'Foto Kenangan Rahasia';
         storyEl.textContent = gameState.unlockedMessage;
+        hintBoxEl.classList.remove('hidden');
         hintTextEl.textContent = `Kunci Gabungan Valid: ${gameState.solvedAnswers[2].toUpperCase()}`;
         hintTier2El.classList.add('hidden');
         actionBtn.textContent = 'Lihat Foto Ukuran Penuh';
@@ -1054,9 +1012,10 @@ function renderDetectiveOS() {
         storyEl.textContent = stgObj.story;
 
         if (hintLevel >= 1) {
+            hintBoxEl.classList.remove('hidden');
             hintTextEl.textContent = stgObj.hint;
         } else {
-            hintTextEl.textContent = 'Gunakan tombol Petunjuk (+2m penalti) jika butuh bantuan.';
+            hintBoxEl.classList.add('hidden');
         }
 
         if (hintLevel >= 2) {
@@ -1078,9 +1037,8 @@ function renderDetectiveOS() {
     }
 }
 
-/**
- * Verifikasi Jawaban Tiap Babak & Membuka Brankas pada Babak 3
- */
+/* --- Validasi Jawaban & Pembukaan Brankas --- */
+
 async function submitStageAnswer(event) {
     event.preventDefault();
     if (!activeVault || gameState.currentStage > 3) return;
@@ -1162,9 +1120,8 @@ async function submitStageAnswer(event) {
     }
 }
 
-/**
- * Modal Foto Terbuka & Modal Papan Koneksi
- */
+/* --- Modal & Bantuan --- */
+
 function openUnlockedPhotoModal() {
     if (gameState.currentStage !== 4) return;
     const modal = document.getElementById('vault-modal');
@@ -1288,12 +1245,19 @@ function resetPlayerProgress() {
     renderDetectiveOS();
 }
 
-/**
- * Inisialisasi Saat Halaman Dimuat
- */
+/* --- Inisialisasi --- */
+
 window.addEventListener('DOMContentLoaded', async () => {
     if (EMBEDDED_VAULT_PAYLOAD) {
         activeVault = EMBEDDED_VAULT_PAYLOAD;
+
+        const topPill = document.getElementById('top-mode-pill');
+        if (topPill) {
+            topPill.textContent = 'Mode Penyelidik';
+            topPill.className = 'px-3 py-1 rounded-xl bg-[#6c5ce7] text-white text-[11px] font-bold shadow-sm cursor-default';
+            topPill.disabled = true;
+        }
+
         const editorView = document.getElementById('canvas-editor-mode');
         if (editorView) editorView.remove();
         const sidebarEditorBtn = document.getElementById('btn-sidebar-editor');
