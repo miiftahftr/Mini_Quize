@@ -1,0 +1,223 @@
+/* Estetika Tactile 3D Claymorphism Desktop OS */
+body {
+    background-color: #d8cebe;
+    background-image: 
+        radial-gradient(circle at 20% 15%, rgba(255, 250, 240, 0.7) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(182, 165, 140, 0.55) 0%, transparent 50%),
+        linear-gradient(135deg, #e2d8c7 0%, #cfc2ad 100%);
+    color: #3a3228;
+    min-height: 100vh;
+}
+
+/* Panel Clay Utama */
+.clay-window {
+    background: linear-gradient(145deg, #f6f1e7, #ebe3d3);
+    border-radius: 26px;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 
+        0 20px 45px rgba(72, 58, 41, 0.18),
+        0 6px 14px rgba(72, 58, 41, 0.1),
+        inset 0 2px 3px rgba(255, 255, 255, 0.9),
+        inset 0 -3px 6px rgba(178, 164, 142, 0.35);
+}
+
+/* Kartu Clay Sub-panel */
+.clay-card {
+    background: linear-gradient(145deg, #f8f4ec, #ede5d6);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        6px 8px 18px rgba(88, 72, 52, 0.12),
+        -4px -4px 12px rgba(255, 255, 255, 0.85),
+        inset 0 1px 2px rgba(255, 255, 255, 0.9),
+        inset 0 -2px 4px rgba(175, 160, 138, 0.25);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.clay-card-active {
+    background: linear-gradient(145deg, #ffffff, #f2eadc);
+    border: 2px solid #6c5ce7;
+    box-shadow: 
+        8px 10px 22px rgba(108, 92, 231, 0.18),
+        -4px -4px 12px rgba(255, 255, 255, 0.9),
+        inset 0 2px 4px rgba(255, 255, 255, 1);
+}
+
+/* Bingkai Layar Bukti (Bezel Tebal Clay) */
+.clay-phone-bezel {
+    background: linear-gradient(145deg, #efe7d8, #dfd4c0);
+    border-radius: 34px;
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 
+        12px 16px 30px rgba(74, 60, 42, 0.18),
+        -6px -6px 16px rgba(255, 255, 255, 0.85),
+        inset 0 2px 5px rgba(255, 255, 255, 0.9),
+        inset 0 -4px 8px rgba(164, 148, 124, 0.4);
+}
+
+/* Sticky Notes Pastel 3D */
+.clay-sticky-yellow {
+    background: linear-gradient(145deg, #fae79c, #f0d573);
+    border-radius: 16px;
+    box-shadow: 
+        6px 8px 16px rgba(122, 102, 42, 0.18),
+        inset 0 2px 3px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 5px rgba(196, 166, 68, 0.35);
+}
+
+.clay-sticky-lavender {
+    background: linear-gradient(145deg, #d7c3f0, #bea3e0);
+    border-radius: 16px;
+    box-shadow: 
+        6px 8px 16px rgba(84, 64, 122, 0.18),
+        inset 0 2px 3px rgba(255, 255, 255, 0.75),
+        inset 0 -3px 5px rgba(146, 118, 186, 0.35);
+}
+
+.clay-sticky-sage {
+    background: linear-gradient(145deg, #c7deb2, #aac691);
+    border-radius: 16px;
+    box-shadow: 
+        5px 7px 14px rgba(68, 92, 52, 0.16),
+        inset 0 2px 3px rgba(255, 255, 255, 0.75),
+        inset 0 -3px 5px rgba(132, 162, 108, 0.35);
+}
+
+.clay-sticky-peach {
+    background: linear-gradient(145deg, #f6c79f, #e6a878);
+    border-radius: 16px;
+    box-shadow: 
+        5px 7px 14px rgba(118, 72, 42, 0.16),
+        inset 0 2px 3px rgba(255, 255, 255, 0.75),
+        inset 0 -3px 5px rgba(188, 128, 82, 0.35);
+}
+
+/* Tombol Mekanik Keycaps 3D di Dock Bawah */
+.clay-keycap {
+    background: linear-gradient(180deg, #faf6ee 0%, #e7decb 100%);
+    border-radius: 16px;
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 
+        0 6px 0 #c5b8a1,
+        0 10px 16px rgba(65, 52, 36, 0.22),
+        inset 0 2px 3px rgba(255, 255, 255, 0.95);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.clay-keycap:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 0 #c5b8a1,
+        0 13px 20px rgba(65, 52, 36, 0.25),
+        inset 0 2px 3px rgba(255, 255, 255, 0.95);
+}
+
+.clay-keycap:active, .clay-keycap-pressed {
+    transform: translateY(4px) !important;
+    box-shadow: 
+        0 2px 0 #c5b8a1,
+        0 4px 8px rgba(65, 52, 36, 0.18),
+        inset 0 2px 4px rgba(180, 166, 144, 0.4) !important;
+}
+
+/* Tombol Pill Utama */
+.clay-btn-primary {
+    background: linear-gradient(145deg, #7968f2, #5b4bc4);
+    color: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 
+        0 4px 0 #42349c,
+        0 8px 16px rgba(91, 75, 196, 0.3),
+        inset 0 2px 2px rgba(255, 255, 255, 0.4);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.clay-btn-primary:active {
+    transform: translateY(3px);
+    box-shadow: 
+        0 1px 0 #42349c,
+        0 4px 8px rgba(91, 75, 196, 0.25);
+}
+
+/* Input Clay Cekung (Inset) */
+.clay-input-inset {
+    background: #eae2d3;
+    border-radius: 16px;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 
+        inset 3px 4px 8px rgba(138, 124, 102, 0.28),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.85);
+    transition: all 0.15s ease;
+}
+
+.clay-input-inset:focus {
+    outline: none;
+    background: #f5efe4;
+    border-color: #6c5ce7;
+    box-shadow: 
+        inset 2px 3px 6px rgba(108, 92, 231, 0.15),
+        0 0 0 3px rgba(108, 92, 231, 0.18);
+}
+
+/* Scrollbar Lembut */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(214, 203, 184, 0.3);
+    border-radius: 99px;
+}
+::-webkit-scrollbar-thumb {
+    background: #bfb29c;
+    border-radius: 99px;
+}
+
+/* EFEK ALAT INVESTIGASI: SENTER UV & KACA PEMBESAR                */
+
+.uv-active-cursor {
+    cursor: crosshair !important;
+}
+
+.uv-hidden-ink {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.95), 0 0 16px rgba(56, 189, 248, 0.85);
+}
+
+body.uv-mode-on .uv-hidden-ink {
+    opacity: 1;
+}
+
+#uv-spotlight-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: radial-gradient(
+        circle 145px at var(--uv-x, 50%) var(--uv-y, 50%),
+        rgba(139, 92, 246, 0.14) 0%,
+        rgba(56, 189, 248, 0.10) 45%,
+        rgba(14, 19, 36, 0.62) 100%
+    );
+    mix-blend-mode: normal;
+    transition: opacity 0.2s ease;
+}
+
+.magnifier-lens {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 9999px;
+    border: 3.5px solid #2a7b88;
+    box-shadow:
+        0 10px 24px rgba(20, 40, 52, 0.38),
+        inset 0 0 14px rgba(255, 255, 255, 0.75);
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 25;
+    background-repeat: no-repeat;
+}
